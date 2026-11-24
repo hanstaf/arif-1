@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="Simulator forward chaining dan keputusan akses untuk Bab I buku ajar Logika Matematika dan Implementasinya dalam Bidang Ilmu Komputer.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🧮%3C/text%3E%3C/svg%3E">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Simulator Logika Bab I</title>
+<style>
+:root{--bg:#f3f6fa;--card:#fff;--ink:#14263a;--mute:#4f6078;--line:#c7d2e0;--navy:#34506f;--ob:#fde9cc;--ol:#9c5a00;--gb:#e1efdd;--gl:#2a6a2c;--rb:#fbe4e1;--rl:#a3342a;--ph:#eef2f7;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1b29;--card:#172638;--ink:#e6edf6;--mute:#9db0c7;--line:#2f4560;--navy:#8fb0d6;--ob:#4a3510;--ol:#f0b25a;--gb:#17381c;--gl:#7fd283;--rb:#4a1f1b;--rl:#ff9d93;--ph:#1d3047;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1b29;--card:#172638;--ink:#e6edf6;--mute:#9db0c7;--line:#2f4560;--navy:#8fb0d6;--ob:#4a3510;--ol:#f0b25a;--gb:#17381c;--gl:#7fd283;--rb:#4a1f1b;--rl:#ff9d93;--ph:#1d3047;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px);background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 Georgia,"Times New Roman",serif}
+.wrap{max-width:46rem;margin:0 auto;padding:1rem}
+h1{font-size:1.55rem;line-height:1.2;margin:.3rem 0}h2{font-size:1.15rem;margin:0 0 .4rem}
+p{margin:.4rem 0}.mute{color:var(--mute);font-size:.95rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:1rem;margin:0 0 1rem}
+.rule{background:var(--ob);border:2px solid var(--ol);border-radius:8px;padding:.45rem .7rem;margin:.4rem 0;font:600 .95rem ui-monospace,Consolas,monospace;overflow-wrap:anywhere}
+label.f{display:inline-flex;align-items:center;gap:.5rem;min-height:44px;margin:.1rem .8rem .1rem 0;font:1rem system-ui,sans-serif}
+input[type=checkbox]{width:22px;height:22px;accent-color:var(--navy)}
+button{font:600 1rem system-ui,sans-serif;min-height:44px;padding:.5rem 1rem;border-radius:8px;border:2px solid var(--navy);background:var(--navy);color:var(--bg);cursor:pointer}
+button.alt,.opt{background:var(--card);color:var(--ink)}
+:focus-visible{outline:3px solid var(--ol);outline-offset:2px}
+.step{border-left:4px solid var(--navy);padding:.3rem .8rem;margin:.6rem 0;background:var(--ph);border-radius:0 8px 8px 0;font:.95rem/1.5 system-ui,sans-serif;overflow-wrap:anywhere}
+.chip{display:inline-block;padding:.1rem .6rem;margin:.15rem;border-radius:99px;background:var(--gb);border:2px solid var(--gl);font:600 .88rem ui-monospace,Consolas,monospace}
+.v1{color:var(--gl);font-weight:700}.v0{color:var(--rl);font-weight:700}
+.badge{display:inline-block;padding:.3rem .9rem;border-radius:8px;font:700 1.05rem system-ui,sans-serif;border:2px solid}
+.ok{background:var(--gb);color:var(--gl);border-color:var(--gl)}.no{background:var(--rb);color:var(--rl);border-color:var(--rl)}
+.opt{display:block;width:100%;text-align:left;margin:.5rem 0;font-weight:500;border-color:var(--line)}
+.opt.right{background:var(--gb);border-color:var(--gl)}.opt.wrong{background:var(--rb);border-color:var(--rl)}
+.bar{height:8px;background:var(--ph);border-radius:99px;overflow:hidden;margin:.5rem 0 1rem}.bar i{display:block;height:100%;background:var(--navy);width:0}
+@media (prefers-reduced-motion:no-preference){.bar i{transition:width .3s}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<h1>Simulator Logika Bab I</h1>
+<p class="mute">Pendamping buku ajar Logika Matematika dan Implementasinya dalam Bidang Ilmu Komputer. Coba mesin aturan dan kontrol akses pada Subbab 4.2 dan 4.4.</p>
+</header>
+
+<main>
+<section class="card">
+<h2>1. Mesin aturan: forward chaining</h2>
+<p class="mute">Aturan dan prosesnya sama dengan Kode 1 (Subbab 4.2). Pilih fakta awal, lalu jalankan.</p>
+<div class="rule">R1: suhu_tinggi → alarm_suhu</div>
+<div class="rule">R2: alarm_suhu ∧ tekanan_rendah → risiko</div>
+<p><label class="f"><input type="checkbox" class="f" value="suhu_tinggi" checked> suhu_tinggi</label><label class="f"><input type="checkbox" class="f" value="tekanan_rendah" checked> tekanan_rendah</label></p>
+<button id="run" type="button">Jalankan forward chaining</button>
+<div id="out" aria-live="polite"></div>
+<p class="mute">Coba matikan tekanan_rendah: R2 tidak pernah terpenuhi, sehingga risiko tidak diturunkan.</p>
+</section>
+
+<section class="card">
+<h2>2. Keputusan akses: autentikasi dan otorisasi</h2>
+<p class="mute">Sama dengan Gambar 2(b), Subbab 4.4. Ubah kondisi dan lihat nilai kebenarannya berubah langsung.</p>
+<p><label class="f"><input type="checkbox" class="a" id="sb" checked> sandi benar</label><label class="f"><input type="checkbox" class="a" id="ot" checked> OTP benar</label><label class="f"><input type="checkbox" class="a" id="ps" checked> peran sesuai</label><label class="f"><input type="checkbox" class="a" id="tb"> terblokir</label></p>
+<div id="acc" aria-live="polite"></div>
+</section>
+</main>
+
+
+</div>
+
+<script>
+const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+
+
+/* 1. forward chaining (meniru Kode 1) */
+const R=[{id:"R1",a:["suhu_tinggi"],t:"alarm_suhu"},{id:"R2",a:["alarm_suhu","tekanan_rendah"],t:"risiko"}];
+$("#run").onclick=()=>{
+ const F=new Set([...document.querySelectorAll("input.f:checked")].map(e=>e.value));
+ let ch=true,it=0,h="";
+ while(ch){ch=false;it++;let l="";
+  for(const r of R){const ok=r.a.every(x=>F.has(x));
+   if(ok&&!F.has(r.t)){F.add(r.t);ch=true;l+=`<div>${r.id}: <b>${r.a.join(" ∧ ")}</b> benar, fakta baru <b>${r.t}</b> (modus ponens)</div>`}
+   else l+=`<div>${r.id}: ${ok?r.t+" sudah menjadi fakta":"syarat belum terpenuhi"}</div>`}
+  h+=`<div class="step"><b>Iterasi ${it}</b>${l}${ch?"":"<div>Tidak ada fakta baru, sehingga while berhenti.</div>"}</div>`}
+ const g=F.has("risiko");
+ $("#out").innerHTML=h+`<p>Fakta akhir: ${[...F].sort().map(x=>`<span class="chip">${x}</span>`).join("")||"kosong"}</p><p>Tujuan <b>risiko</b>: <span class="${g?"v1":"v0"}">${g?"terbukti":"tidak terbukti"}</span></p>`};
+
+/* 2. keputusan akses */
+function acc(){const g=n=>$("#"+n).checked?1:0,s=g("sb"),o=g("ot"),p=g("ps"),b=g("tb"),
+ a=s&o,w=p&(1-b),z=a&w,c=x=>`<span class="v${x}">${x}</span>`;
+ $("#acc").innerHTML=`<div class="step">Terautentikasi = sandi ∧ OTP = ${c(s)} ∧ ${c(o)} = ${c(a)}</div><div class="step">Berwenang = peran ∧ ¬terblokir = ${c(p)} ∧ ¬${c(b)} = ${c(w)}</div><div class="step">Izin = terautentikasi ∧ berwenang = ${c(a)} ∧ ${c(w)} = ${c(z)}</div><p><span class="badge ${z?"ok":"no"}">${z?"IZINKAN":"TOLAK"}</span></p><p>${z?"Semua syarat AND terpenuhi.":!a?"Gagal autentikasi: identitas belum terbukti.":"Lolos autentikasi tetapi gagal otorisasi: identitas sah, hak akses tidak ada."}</p>`}
+document.querySelectorAll("input.a").forEach(e=>e.onchange=acc);acc();
+
+</script>
+</body>
+</html>
